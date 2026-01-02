@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 import pymysql
+import json
 
 app = Flask(__name__)
 
@@ -28,13 +29,20 @@ def get_secret():
         raise e
 
     secret = get_secret_value_response['SecretString']
+    return json.loads(secret)
 
+@app.route('/db_test')
+def db_test():
+    secret = get_secret()
+    print(secret)
+    return "DB Test Successful"
 
 def get_db_connection():
-    connection = pymysql.connect(host=secret["host"],  # Replace with your RDS endpoint
+    secret = get_secret()
+    connection = pymysql.connect(host="terraform-20260102033238248300000001.chqywueo0dha.ap-south-1.rds.amazonaws.com",  # Replace with your RDS endpoint
+                                 db="mydb",   # Replace with your database name
                                  user=secret["username"],      # Replace with your RDS username
                                  password=secret["password"],  # Replace with your RDS password
-                                 db=secret["dbname"],   # Replace with your database name
                                  charset='utf8mb4',
                                  cursorclass=pymysql.cursors.DictCursor)
     return connection
@@ -84,4 +92,8 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
+    secret = get_secret()
     app.run(debug=True, host='0.0.0.0')
+
+    # print(secret)
+    # print("Hello World")
