@@ -9,7 +9,7 @@ from botocore.exceptions import ClientError
 
 
 def get_secret():
-    secret_name = "rds!db-9ea6f069-b806-409c-adf0-6f4c051ede2c"
+    secret_name = "rds!db-ceaf6479-81a7-41e9-b5e5-a3c348c391f8"
     region_name = "ap-south-1"
 
     # Create a Secrets Manager client
