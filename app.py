@@ -9,7 +9,7 @@ from botocore.exceptions import ClientError
 
 
 def get_secret():
-    secret_name = "rds!db-ceaf6479-81a7-41e9-b5e5-a3c348c391f8"
+    secret_name = "rds!db-ceaf6479-81a7-41e9-b5e5-a3c348c391f8" # Replace the Secret Name
     region_name = "ap-south-1"
 
     # Create a Secrets Manager client
@@ -39,11 +39,10 @@ def db_test():
 
 def get_db_connection():
     secret = get_secret()
-    connection = pymysql.connect(host="terraform-20260102033238248300000001.chqywueo0dha.ap-south-1.rds.amazonaws.com",  # Replace with your RDS endpoint
+    connection = pymysql.connect(host="terraform-20260102152553239000000002.chqywueo0dha.ap-south-1.rds.amazonaws.com",  # Replace with your RDS endpoint
                                  db="mydb",   # Replace with your database name
-                                 user=secret["username"],      # Replace with your RDS username
-                                 password=secret["password"],  # Replace with your RDS password
-                                 charset='utf8mb4',
+                                 user=secret["username"],      
+                                 password=secret["password"],  
                                  cursorclass=pymysql.cursors.DictCursor)
     return connection
 
