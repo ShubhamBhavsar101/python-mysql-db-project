@@ -64,9 +64,10 @@ def db_test():
 
 def get_db_connection():
     secret = get_secret()
-    db_config = get_db_config()
-    connection = pymysql.connect(host="abc",  # Replace with your RDS endpoint
-                                 db="abc",   # Replace with your database name
+    host = get_parameter("/db/mysql/host")
+    db_name = get_parameter("/db/mysql/db_name")
+    connection = pymysql.connect(host=host,  # Replace with your RDS endpoint
+                                 db=db_name,   # Replace with your database name
                                  user=secret["username"],      
                                  password=secret["password"],  
                                  cursorclass=pymysql.cursors.DictCursor)
