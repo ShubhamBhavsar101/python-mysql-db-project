@@ -31,27 +31,42 @@ def get_secret():
     secret = get_secret_value_response['SecretString']
     return json.loads(secret)
 
-def get_db_config():
-    client = boto3.client('secretsmanager', region_name='ap-south-1')
+# def get_db_config():
+#     client = boto3.client('secretsmanager', region_name='ap-south-1')
 
-    response = client.get_secret_value(
-        SecretId='mysql-db-metadata'
+#     response = client.get_secret_value(
+#         SecretId='mysql-db-metadata'
+#     )
+
+#     db_config = json.loads(response['SecretString'])
+#     return db_config
+
+def get_parameter(name):
+    ssm = boto3.client("ssm", region_name='ap-south-1')
+
+    response = ssm.get_parameter(
+        Name=name,
+        WithDecryption=True
     )
-
-    db_config = json.loads(response['SecretString'])
-    return db_config
+    print(response)
+    value = response["Parameter"]["Value"]
+    return json.loads(value)
 
 @app.route('/db_test')
 def db_test():
-    secret = get_secret()
-    print(secret)
+    ssm = boto3.client("ssm", region_name='ap-south-1')
+    response = ssm.get_parameter(
+        Name="/db/mysql/db_name",
+        WithDecryption=True
+    )
+    print(response)
     return "DB Test Successful"
 
 def get_db_connection():
     secret = get_secret()
     db_config = get_db_config()
-    connection = pymysql.connect(host=db_config["host"],  # Replace with your RDS endpoint
-                                 db=db_config["db_name"],   # Replace with your database name
+    connection = pymysql.connect(host="abc",  # Replace with your RDS endpoint
+                                 db="abc",   # Replace with your database name
                                  user=secret["username"],      
                                  password=secret["password"],  
                                  cursorclass=pymysql.cursors.DictCursor)
